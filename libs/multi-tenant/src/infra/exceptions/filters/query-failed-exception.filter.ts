@@ -14,7 +14,6 @@ import { HttpStatusMessage, PgErrorCode, PgErrorMessage } from '../constants';
 
 @Catch(QueryFailedError)
 export class QueryFailedExceptionFilter extends BaseExceptionFilter {
-
   async catch(exception: any, context: ArgumentsHost): Promise<void> {
     // const contextId = await this.requestContext.get(CONTEXT_ID);
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;

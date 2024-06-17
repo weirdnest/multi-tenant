@@ -1,9 +1,9 @@
-
 import { Exclude, Expose } from 'class-transformer';
-import { User } from '../../users';
+import { UserEntity } from '../../entities/user.entity';
+
 
 @Exclude()
-export class AuthUser extends User {
+export class AuthUser extends UserEntity {
   @Expose()
   email: string;
 

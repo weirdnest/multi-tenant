@@ -1,11 +1,47 @@
-import { IAuthService, AuthJwtGuard, AuthUser, AuthLocalGuard, LoginDto, LoginResponseDto, AuthMessage, RegisterDto, AuthJwtRefreshGuard, JwtRefreshDto, RefreshResponseDto } from "@w7t/multi-tenant/core/auth";
-import { User, UsersMessage } from "@w7t/multi-tenant/core/users";
-import { RequestWithContext } from "@w7t/multi-tenant/infra";
-import { HttpExceptionFilter, QueryFailedExceptionFilter } from "@w7t/multi-tenant/infra/exceptions";
+import {
+  IAuthService,
+  AuthJwtGuard,
+  AuthUser,
+  AuthLocalGuard,
+  LoginDto,
+  LoginResponseDto,
+  AuthMessage,
+  RegisterDto,
+  AuthJwtRefreshGuard,
+  JwtRefreshDto,
+  RefreshResponseDto,
+} from '@w7t/multi-tenant/app/auth';
+import { User, UsersMessage } from '@w7t/multi-tenant/core/users';
+import { RequestWithContext } from '@w7t/multi-tenant/infra';
+import {
+  HttpExceptionFilter,
+  HttpStatusMessage,
+  QueryFailedExceptionFilter,
+} from '@w7t/multi-tenant/infra/exceptions';
 // import { TransactionInterceptor } from "@w7t/multi-tenant/infra/interceptors/transaction.interceptor";
-import { TrimPipe } from "@w7t/multi-tenant/infra/pipes/trim.pipe";
-import { Controller, UseFilters, Inject, Get, UseGuards, Request, InternalServerErrorException, Post, HttpStatus, UseInterceptors, UsePipes, Body } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody, ApiResponse } from "@nestjs/swagger";
+import { TrimPipe } from '@w7t/multi-tenant/infra/pipes/trim.pipe';
+import {
+  Controller,
+  UseFilters,
+  Inject,
+  Get,
+  UseGuards,
+  Request,
+  InternalServerErrorException,
+  Post,
+  HttpStatus,
+  UseInterceptors,
+  UsePipes,
+  Body,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiBody,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { UserEntity } from '../entities/user.entity';
 
 @Controller('auth')
 @UseFilters(HttpExceptionFilter, QueryFailedExceptionFilter)
@@ -19,13 +55,13 @@ export class AuthController {
   @UseGuards(AuthJwtGuard)
   @ApiOperation({ summary: `Returns current user` })
   @ApiBearerAuth()
-  // @ApiResponse({ status: HttpStatus.OK, description: HttpStatusMessage.OK, type: User })
-  // @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: HttpStatusMessage.UNAUTHORIZED })
-  check(@Request() req: RequestWithContext): User {
+  @ApiResponse({ status: HttpStatus.OK, description: HttpStatusMessage.OK, type: User })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: HttpStatusMessage.UNAUTHORIZED })
+  check(@Request() req: RequestWithContext): UserEntity {
     const { user } = req || {};
     if (!user?.id)
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
-    return new AuthUser(user);
+    return new UserEntity(user);
   }
 
   @Post('login')
@@ -58,22 +94,22 @@ export class AuthController {
 
   @Post('register')
   // @UseInterceptors(TransactionInterceptor)
-  @ApiOperation({ summary: `Registers new user` })
+  @ApiOperation({ summary: `Register new user` })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: User,
+    type: UserEntity,
     description: AuthMessage.CREATED,
   })
   @UsePipes(TrimPipe)
-  async register(@Body() body: RegisterDto) {
+  async register(@Body() body: RegisterDto): Promise<UserEntity> {
     const user = await this.authService.register(body);
-    return new AuthUser(user);
+    return new UserEntity(user);
   }
 
   @Post('refresh')
   @UseGuards(AuthJwtRefreshGuard)
-  @ApiOperation({ summary: `Refreshes JWT tokens` })
+  @ApiOperation({ summary: `Refresh JWT tokens` })
   @ApiBody({ type: JwtRefreshDto })
   @ApiResponse({
     status: HttpStatus.CREATED,

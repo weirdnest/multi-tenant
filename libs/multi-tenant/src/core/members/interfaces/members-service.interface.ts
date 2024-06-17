@@ -1,4 +1,3 @@
-
 import { Member } from '../entities/member';
 import { CreateMemberDto } from '../dto/create-member.dto';
 import { UpdateMemberDto } from '../dto/update-member.dto';

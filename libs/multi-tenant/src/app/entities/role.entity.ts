@@ -51,10 +51,10 @@ export class RoleEntity extends AbstractDto<RoleEntity> {
 
   @ManyToMany(() => PermissionEntity, (permission) => permission.roles)
   @JoinTable({ name: 'roles_permissions' })
-  permissions: PermissionEntity[];
+  permissions?: PermissionEntity[];
 
   @ManyToMany(() => MemberEntity, (member: MemberEntity) => member.roles)
-  members: MemberEntity[];
+  members?: MemberEntity[];
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -72,5 +72,5 @@ export class RoleEntity extends AbstractDto<RoleEntity> {
   updatedAt: Date;
 
   @ManyToOne(() => TenantEntity, (tenant: TenantEntity) => tenant.roles)
-  tenant: TenantEntity;
+  tenant?: TenantEntity;
 }

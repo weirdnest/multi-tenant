@@ -43,14 +43,14 @@ export class TenantEntity {
   updatedAt: Date;
 
   @OneToMany(() => MemberEntity, (member: MemberEntity) => member.tenant)
-  members: MemberEntity[];
+  members?: MemberEntity[];
 
   @OneToMany(() => RoleEntity, (role: RoleEntity) => role.tenant)
-  roles: RoleEntity[];
+  roles?: RoleEntity[];
 
   @OneToMany(
     () => PermissionEntity,
     (permission: PermissionEntity) => permission.tenant,
   )
-  permissions: PermissionEntity[];
+  permissions?: PermissionEntity[];
 }

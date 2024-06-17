@@ -8,7 +8,11 @@ import { sampleMember01 } from '../../members/interfaces/members.samples';
 import * as slug from 'slug';
 import { UsersMessage } from '../../users';
 import { TenantsMessage } from '../constants';
-import { MockType, mockRepoFactory, mockServiceFactory } from '@w7t/multi-tenant/infra/abstract/specs';
+import {
+  MockType,
+  mockRepoFactory,
+  mockServiceFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
 
 describe('TenantsService', () => {
   let service: TenantsService;

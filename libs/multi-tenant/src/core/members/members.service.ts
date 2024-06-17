@@ -13,24 +13,28 @@ import { TenantsMessage } from '../tenants/constants';
 import { UsersMessage } from '../users';
 import { Role } from '../roles/entities/role';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { AbstractFindManyResponse, ServiceFindManyOptions, ServiceFindOneOptions, ServiceRequestContext } from '@w7t/multi-tenant/infra/interfaces';
-import { AbilityAction, IAbilitiesService, SetAbilitiesContext, SetAbilitiesOptions } from '@w7t/multi-tenant/core/abilities'
+import {
+  AbstractFindManyResponse,
+  ServiceFindManyOptions,
+  ServiceFindOneOptions,
+  ServiceRequestContext,
+} from '@w7t/multi-tenant/infra/interfaces';
+import {
+  AbilityAction,
+  IAbilitiesService,
+  SetAbilitiesContext,
+  SetAbilitiesOptions,
+} from '@w7t/multi-tenant/core/abilities';
 import { CaslAbilitySubjects } from '@w7t/multi-tenant/infra/constants';
 
 @Injectable()
 export class MembersService implements IMembersService {
   constructor(
     @Inject(IMembersRepository) private readonly repo: IMembersRepository,
-    @Inject(IAbilitiesService) private readonly abilities: IAbilitiesService,
-    // private readonly abilities: AbilityService,
-    // private readonly abilities: ICaslAbilityService,
-    // @Inject(ICaslAbilityService)
-    // private readonly abilities: ICaslAbilityService,
-    // private readonly abilities: CaslAbilityService<any>,
+    @Inject(IAbilitiesService) private readonly abilities: IAbilitiesService, // private readonly abilities: AbilityService, // private readonly abilities: ICaslAbilityService, // @Inject(ICaslAbilityService) // private readonly abilities: ICaslAbilityService, // private readonly abilities: CaslAbilityService<any>,
   ) {
     this.abilities.configure(this.setAbilities);
   }
-
 
   async setAbilities(
     context: SetAbilitiesContext,
@@ -54,7 +58,6 @@ export class MembersService implements IMembersService {
     }
   }
 
-
   async create(
     body: CreateMemberDto,
     context: ServiceRequestContext,
@@ -77,14 +80,14 @@ export class MembersService implements IMembersService {
     const { user, tenant } = context || {};
     const { id: userId } = user || {};
     const { id: tenantId } = tenant || {};
-    if (!tenantId)
+    if (!tenantId) {
       throw new InternalServerErrorException(
         TenantsMessage.MISSING_CONTEXT_TENANT,
       );
-    if (!userId)
+    }
+    if (!userId) {
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
-
-    console.log(`MembersService.findMany: member:`, tenant.members[0]);
+    }
 
     const finalQuery = this.repo.getFindManyOptions(query, { tenantId });
     const queryFilter = await this.abilities.getQueryFilter(
@@ -115,11 +118,6 @@ export class MembersService implements IMembersService {
         ];
       }
     }
-
-    console.log(
-      `MembersService.findMany: user: ${user?.name}, finalQuery:`,
-      finalQuery,
-    );
     return this.repo.findMany(finalQuery);
   }
 

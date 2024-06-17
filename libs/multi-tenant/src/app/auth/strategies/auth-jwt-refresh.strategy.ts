@@ -6,7 +6,6 @@ import { IAuthService, AuthJwtPayload } from '../interfaces';
 import { ModuleRef } from '@nestjs/core';
 import { IConfigService } from '@w7t/multi-tenant/infra/interfaces/config-service.interface';
 
-
 @Injectable()
 export class AuthJwtRefreshStrategy extends PassportStrategy(
   Strategy,

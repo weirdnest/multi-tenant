@@ -16,9 +16,7 @@ export class TenantsRepository extends AbstractRepository<Tenant> {
     super(repository);
   }
 
-  getRepository(
-    params?: AbstractRepositoryRequestParams,
-  ): Repository<Tenant> {
+  getRepository(params?: AbstractRepositoryRequestParams): Repository<Tenant> {
     const { entityManager } = params || {};
     if (entityManager) {
       return entityManager.getRepository(Tenant);

@@ -1,16 +1,38 @@
-import { AnyAbility, MongoAbility, MongoQuery, AbilityBuilder } from "@casl/ability";
-import { Injectable, Scope, Inject, HttpException, HttpStatus } from "@nestjs/common";
-import { ServiceRequestContext, ServiceFindManyOptions } from "@w7t/multi-tenant/infra";
-import { Member } from "../members/entities/member";
-import { Permission } from "../permissions/entities/permission";
-import { AbilityAction, AbilityActionValue, AbilityMessages } from "./constants";
-import { IAbilitiesService, SetAbilitiesContext, SetAbilitiesOptions } from "./interfaces";
-import { IAbilityFactory } from "./interfaces/ability-factory.interface";
-
+import {
+  AnyAbility,
+  MongoAbility,
+  MongoQuery,
+  AbilityBuilder,
+} from '@casl/ability';
+import {
+  Injectable,
+  Scope,
+  Inject,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import {
+  ServiceRequestContext,
+  ServiceFindManyOptions,
+} from '@w7t/multi-tenant/infra';
+import { Member } from '../members/entities/member';
+import { Permission } from '../permissions/entities/permission';
+import {
+  AbilityAction,
+  AbilityActionValue,
+  AbilityMessages,
+} from './constants';
+import {
+  IAbilitiesService,
+  SetAbilitiesContext,
+  SetAbilitiesOptions,
+} from './interfaces';
+import { IAbilityFactory } from './interfaces/ability-factory.interface';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AbilitiesService<T extends AnyAbility>
-  implements IAbilitiesService {
+  implements IAbilitiesService
+{
   private _context: ServiceRequestContext;
   public get context() {
     return this._context;
@@ -32,16 +54,16 @@ export class AbilitiesService<T extends AnyAbility>
   constructor(
     @Inject(IAbilityFactory)
     private readonly abilityFactory: IAbilityFactory<T>,
-  ) {
-    console.log(`CaslAbilityService.init`);
-  }
+  ) { }
 
   private _ability: undefined | MongoAbility<[AbilityAction, T], MongoQuery>;
   public get ability() {
     return this._ability;
   }
 
-  private _builder: AbilityBuilder<MongoAbility<[AbilityAction, T], MongoQuery>>;
+  private _builder: AbilityBuilder<
+    MongoAbility<[AbilityAction, T], MongoQuery>
+  >;
   public get builder() {
     return this._builder;
   }
@@ -186,7 +208,10 @@ export class AbilitiesService<T extends AnyAbility>
 
     actions.forEach((action) => {
       if (!ability.can(action as AbilityAction, condition as T)) {
-        throw new HttpException(AbilityMessages.FORBIDDEN, HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          AbilityMessages.FORBIDDEN,
+          HttpStatus.FORBIDDEN,
+        );
       }
     });
   }

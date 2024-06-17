@@ -38,6 +38,7 @@ export class AuthLocalGuard extends AuthGuard('local') {
       });
     }
 
+    // console.log(`AuthLocalGuard.canActivate: body:`, body);
     return super.canActivate(host) as Promise<boolean>;
   }
 }

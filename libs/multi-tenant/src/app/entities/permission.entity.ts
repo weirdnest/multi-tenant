@@ -15,7 +15,7 @@ import { RoleEntity } from './role.entity';
 @Entity({ name: 'permissions' })
 export class PermissionEntity {
   @ManyToOne(() => TenantEntity, (tenant: TenantEntity) => tenant.permissions)
-  tenant: TenantEntity;
+  tenant?: TenantEntity;
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -54,7 +54,7 @@ export class PermissionEntity {
   roleId?: string;
 
   @ManyToMany(() => RoleEntity, (role: RoleEntity) => role.permissions)
-  roles: RoleEntity[];
+  roles?: RoleEntity[];
 
   @CreateDateColumn({
     type: 'timestamp',

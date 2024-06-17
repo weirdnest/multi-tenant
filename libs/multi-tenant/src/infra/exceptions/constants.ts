@@ -1,7 +1,7 @@
 export { HttpStatus } from '@nestjs/common';
 
 export enum HttpStatusMessage {
-  OK = `Success`,
+  OK = `OK`,
   CREATED = `Created`,
   INTERNAL_SERVER_ERROR = `Internal server error`,
   UNAUTHORIZED = `Unauthorized`,

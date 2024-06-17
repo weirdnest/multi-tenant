@@ -1,13 +1,31 @@
-import { Controller, UseFilters, UseGuards, Inject, Post, Request, UseInterceptors, Body, Get, Param, NotFoundException, Patch, Delete, Query } from "@nestjs/common";
-import { AuthJwtGuard, AuthJwtTenantGuard } from "@w7t/multi-tenant/core/auth";
-import { RolesMessage } from "@w7t/multi-tenant/core/roles/constants";
-import { UpdateRoleDto } from "@w7t/multi-tenant/core/roles/dto/update-role.dto";
-import { IRolesService } from "@w7t/multi-tenant/core/roles/interfaces/roles-service.interface";
-import { CreateTenantDto } from "@w7t/multi-tenant/core/tenants";
-import { RequestWithContext } from "@w7t/multi-tenant/infra";
-import { HttpExceptionFilter, QueryFailedExceptionFilter } from "@w7t/multi-tenant/infra/exceptions";
+import {
+  Controller,
+  UseFilters,
+  UseGuards,
+  Inject,
+  Post,
+  Request,
+  UseInterceptors,
+  Body,
+  Get,
+  Param,
+  NotFoundException,
+  Patch,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import { AuthJwtGuard, AuthJwtTenantGuard } from '@w7t/multi-tenant/app/auth';
+import { RolesMessage } from '@w7t/multi-tenant/core/roles/constants';
+import { UpdateRoleDto } from '@w7t/multi-tenant/core/roles/dto/update-role.dto';
+import { IRolesService } from '@w7t/multi-tenant/core/roles/interfaces/roles-service.interface';
+import { CreateTenantDto } from '@w7t/multi-tenant/core/tenants';
+import { RequestWithContext } from '@w7t/multi-tenant/infra';
+import {
+  HttpExceptionFilter,
+  QueryFailedExceptionFilter,
+} from '@w7t/multi-tenant/infra/exceptions';
 // import { TransactionInterceptor } from "src/infra/interceptors/transaction.interceptor";
-import { RoleEntity } from "../entities/role.entity";
+import { RoleEntity } from '../entities/role.entity';
 
 @Controller('roles')
 @UseFilters(HttpExceptionFilter, QueryFailedExceptionFilter)

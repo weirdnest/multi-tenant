@@ -20,7 +20,9 @@ export interface IPolicyHandler<T> {
 
 @Injectable()
 export class AbilityFactory<T> implements IAbilityFactory<T> {
-  private _builder: undefined | AbilityBuilder<MongoAbility<[AbilityAction, T]>>;
+  private _builder:
+    | undefined
+    | AbilityBuilder<MongoAbility<[AbilityAction, T]>>;
   private get builder() {
     return this._builder;
   }

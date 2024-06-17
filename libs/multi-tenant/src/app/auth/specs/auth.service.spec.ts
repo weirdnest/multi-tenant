@@ -2,18 +2,30 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../auth.service';
 
 import { AuthMessage } from '../constants';
-import { AbilityFactoryProvider, IConfigService, ServiceRequestContext } from '@w7t/multi-tenant/infra';
-import { MockType, mockServiceFactory } from '@w7t/multi-tenant/infra/abstract/specs';
-import { IMembersService } from '../../members/interfaces/members-service.interface';
-import { sampleMember01 } from '../../members/interfaces/members.samples';
-import { ITenantsService } from '../../tenants';
-import { TenantsMessage } from '../../tenants/constants';
-import { sampleTenant01 } from '../../tenants/interfaces/tenants.samples';
-import { IUsersService, UsersMessage } from '../../users';
-import { johnDoe } from '../../users/interfaces/users.samples';
+import {
+  AbilityFactoryProvider,
+  IConfigService,
+  ServiceRequestContext,
+} from '@w7t/multi-tenant/infra';
+import {
+  MockType,
+  mockServiceFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
 import { IJwtService } from '../interfaces';
 import { AbilitiesServiceProvider } from '@w7t/multi-tenant/infra/providers/abilities-service.provider';
-import { mockConfigService, mockJwtService, HASHED_PASSWORD } from './auth.mocks';
+import {
+  mockConfigService,
+  mockJwtService,
+  HASHED_PASSWORD,
+} from './auth.mocks';
+import { IUsersService } from '@w7t/multi-tenant/core/users/interfaces/users-service.interface';
+import { ITenantsService } from '@w7t/multi-tenant/core/tenants/interfaces/tenants-service.interface';
+import { IMembersService } from '@w7t/multi-tenant/core/members/interfaces/members-service.interface';
+import { sampleTenant01 } from '@w7t/multi-tenant/core/tenants/interfaces/tenants.samples';
+import { johnDoe } from '@w7t/multi-tenant/core/users/interfaces/users.samples';
+import { sampleMember01 } from '@w7t/multi-tenant/core/members/interfaces/members.samples';
+import { TenantsMessage } from '@w7t/multi-tenant/core/tenants/constants';
+import { UsersMessage } from '@w7t/multi-tenant/core/users/constants';
 
 jest.mock('bcrypt', () => {
   global.mockBcrypt = {

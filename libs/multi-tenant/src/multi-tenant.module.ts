@@ -1,9 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AbilitiesModule } from './core/abilities/abilities.module';
 import { UsersController } from './app/controllers/users.controller';
-import { AuthJwtRefreshStrategy, AuthJwtStrategy, AuthLocalStrategy, AuthTenantStrategy } from './core/auth';
+import {
+  AuthJwtRefreshStrategy,
+  AuthJwtStrategy,
+  AuthLocalStrategy,
+  AuthTenantStrategy,
+} from './app/auth';
 import { AuthController } from './app/controllers/auth.controller';
-import { AuthServiceProvider, ConfigServiceProvider, MembersRepositoryProvider, MembersServiceProvider, PermissionsRepositoryProvider, PermissionsServiceProvider, RolesRepositoryProvider, RolesServiceProvider, TenantsRepositoryProvider, TenantsServiceProvider, UsersRepositoryProvider, UsersServiceProvider } from './infra';
+import {
+  AuthServiceProvider,
+  ConfigServiceProvider,
+  MembersRepositoryProvider,
+  MembersServiceProvider,
+  PermissionsRepositoryProvider,
+  PermissionsServiceProvider,
+  RolesRepositoryProvider,
+  RolesServiceProvider,
+  TenantsRepositoryProvider,
+  TenantsServiceProvider,
+  UsersRepositoryProvider,
+  UsersServiceProvider,
+} from './infra';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './app/entities/user.entity';
 import { MemberEntity } from './app/entities/member.entity';
@@ -65,7 +83,6 @@ import { RolesController } from './app/controllers/roles.controller';
     PermissionsController,
     RolesController,
   ],
-  exports: [
-  ],
+  exports: [],
 })
 export class MultiTenantModule { }

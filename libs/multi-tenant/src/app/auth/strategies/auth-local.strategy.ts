@@ -3,8 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { IAuthService } from '../interfaces/auth-service.interface';
-import { User } from '../../users/entities/user';
-
+import { User } from '@w7t/multi-tenant/core/users/entities/user';
 
 @Injectable()
 export class AuthLocalStrategy extends PassportStrategy(Strategy) {

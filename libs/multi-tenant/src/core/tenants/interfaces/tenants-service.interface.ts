@@ -1,4 +1,3 @@
-
 import { Tenant } from '../entities/tenant';
 import { CreateTenantDto } from '../dto/create-tenant.dto';
 import { UpdateTenantDto } from '../dto';

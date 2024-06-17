@@ -6,4 +6,4 @@ import { AbilitiesServiceProvider } from '@w7t/multi-tenant/infra/providers';
   // controllers: [TenantsController],
   providers: [TenantsService, AbilitiesServiceProvider],
 })
-export class TenantsModule { }
+export class TenantsModule {}

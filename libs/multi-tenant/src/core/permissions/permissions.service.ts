@@ -2,7 +2,12 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
 import { Permission } from './entities/permission';
 import { Member } from '../members/entities/member';
-import { ServiceRequestContext, ServiceFindManyOptions, AbstractFindManyResponse, ServiceFindOneOptions } from '@w7t/multi-tenant/infra';
+import {
+  ServiceRequestContext,
+  ServiceFindManyOptions,
+  AbstractFindManyResponse,
+  ServiceFindOneOptions,
+} from '@w7t/multi-tenant/infra';
 import { TenantsMessage } from '../tenants/constants';
 import { UsersMessage } from '../users';
 import { PermissionsMessage, PERMISSIONS_UPSERT_LIMIT } from './constants';
@@ -14,9 +19,7 @@ import { IPermissionsService } from './interfaces/permissions-service.interface'
 export class PermissionsService implements IPermissionsService {
   constructor(
     @Inject(IPermissionsRepository)
-    private readonly repo: IPermissionsRepository,
-    // @Inject(ICaslAbilityService)
-    // private readonly abilities: ICaslAbilityService,
+    private readonly repo: IPermissionsRepository, // @Inject(ICaslAbilityService) // private readonly abilities: ICaslAbilityService,
   ) {
     // this.abilities.configure(this.setAbilities);
   }

@@ -3,8 +3,7 @@ import { RegisterDto } from '../dto/register.dto';
 import { AuthJwtPayload } from './auth-jwt-payload.interface';
 import { AuthTenantResponseDto } from '../dto';
 import { ServiceRequestContext } from '@w7t/multi-tenant/infra';
-import { User } from '../../users';
-
+import { User } from '@w7t/multi-tenant/core/users/entities/user';
 
 export abstract class AbstractAuthService {
   abstract register(payload: RegisterDto): Promise<any>;

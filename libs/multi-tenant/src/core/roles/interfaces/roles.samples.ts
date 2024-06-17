@@ -6,12 +6,14 @@ export const RolesSamples = {
     tenantId: sampleTenant01.id,
     slug: 'administrator',
     name: 'Administrator',
+    isDefault: false,
   },
   sampleRoleMember: {
     id: '0c24fc94-2045-49be-a3cc-2849112130aa',
     tenantId: sampleTenant01.id,
     slug: 'member',
     name: 'Member',
+    isDefault: true,
   },
 };
 

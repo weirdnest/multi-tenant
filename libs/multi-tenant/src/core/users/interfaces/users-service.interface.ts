@@ -1,9 +1,11 @@
+import { ServiceInterface } from '@w7t/multi-tenant/infra/interfaces/service.interface';
+import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user';
 
-export interface IUsersService {
-  create(body: Partial<User>): Promise<User>;
-  findMany(query: any): Promise<any>;
-  findOne(query: any): Promise<User | undefined>;
-}
+export type IUsersService = ServiceInterface<
+  User,
+  CreateUserDto,
+  Partial<User>
+>;
 
 export const IUsersService = Symbol('IUsersService');

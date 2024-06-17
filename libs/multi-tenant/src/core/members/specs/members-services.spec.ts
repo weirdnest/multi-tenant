@@ -5,14 +5,20 @@ import { sampleMember01 } from '../interfaces/members.samples';
 import { MembersService } from '../members.service';
 import { TenantsMessage } from '../../tenants/constants';
 import { johnDoe } from '../../users/interfaces/users.samples';
-import { IPermissionsService } from '../../permissions/interfaces/permissions-service.interface';
 import {
   sampleRoleAdmin,
   sampleRoleMember,
 } from '../../roles/interfaces/roles.samples';
 import { samplePermission01 } from '../../permissions/interfaces/permissions.samples';
-import { MockType, mockRepoFactory } from '@w7t/multi-tenant/infra/abstract/specs';
-import { AbilitiesServiceProvider, AbilityFactoryProvider } from '@w7t/multi-tenant/infra';
+import {
+  MockType,
+  mockRepoFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
+import {
+  AbilitiesServiceProvider,
+  AbilityFactoryProvider,
+} from '@w7t/multi-tenant/infra';
+import { Role } from '../../roles/entities/role';
 
 describe('MembersService', () => {
   let service: MembersService;
@@ -24,10 +30,12 @@ describe('MembersService', () => {
 
   const tenantWithOwnerMember = {
     ...sampleTenant01,
-    members: [{
-      ...sampleMember01,
-      isOwner: true,
-    }],
+    members: [
+      {
+        ...sampleMember01,
+        isOwner: true,
+      },
+    ],
   };
   const tenantWithMember = {
     ...sampleTenant01,
@@ -70,37 +78,40 @@ describe('MembersService', () => {
     expect(service).toBeDefined();
   });
 
-
   it('findMany: throws error without tenant in context', async () => {
     const payload = { tenantId: sampleMember01.tenantId };
-    await expect(async () => await service.findMany(payload, { user: johnDoe }))
-      .rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
+    await expect(
+      async () => await service.findMany(payload, { user: johnDoe }),
+    ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
     expect(mockRepo.findMany).toHaveBeenCalledTimes(0);
   });
 
-
-
   it('findMany: owner: requests repository', async () => {
     const payload = { tenantId: sampleMember01.tenantId };
-    await service.findMany(payload, { user: johnDoe, tenant: tenantWithOwnerMember });
+    await service.findMany(payload, {
+      user: johnDoe,
+      tenant: tenantWithOwnerMember,
+    });
     expect(mockRepo.findMany).toHaveBeenCalledWith({
       where: {
         tenantId,
-      }
-    });
-  });
-
-
-  it('findMany: member without permissions: requests repository', async () => {
-    const payload = { tenantId: sampleMember01.tenantId };
-    await service.findMany(payload, { user: johnDoe, tenant: tenantWithMember });
-    expect(mockRepo.findMany).toHaveBeenCalledWith({
-      where: {
-        tenantId, userId: johnDoe.id,
       },
     });
   });
 
+  it('findMany: member without permissions: requests repository', async () => {
+    const payload = { tenantId: sampleMember01.tenantId };
+    await service.findMany(payload, {
+      user: johnDoe,
+      tenant: tenantWithMember,
+    });
+    expect(mockRepo.findMany).toHaveBeenCalledWith({
+      where: {
+        tenantId,
+        userId: johnDoe.id,
+      },
+    });
+  });
 
   it('findMany: member with permissions: requests repository', async () => {
     const payload = { tenantId: sampleMember01.tenantId };
@@ -117,7 +128,7 @@ describe('MembersService', () => {
               {
                 ...sampleRoleMember,
                 permissions: [samplePermission01],
-              },
+              } as unknown as Role,
             ],
           },
         ],

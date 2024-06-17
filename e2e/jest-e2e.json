@@ -11,7 +11,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "@app/multi-tenant/(.*)": "<rootDir>/../libs/multi-tenant/src/$1",
-    "@app/multi-tenant": "<rootDir>/../libs/multi-tenant/src"
+    "@w7t/multi-tenant/(.*)": "<rootDir>/../libs/multi-tenant/src/$1",
+    "@w7t/multi-tenant": "<rootDir>/../libs/multi-tenant/src"
   }
 }

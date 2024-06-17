@@ -1,0 +1,53 @@
+image:
+  name: node:20-slim
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - build-image
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+
+unit-test-job:   # This job runs in the test stage.
+  before_script:
+    - npm install
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests..."
+    - npm run test
+
+lint-test-job:   # This job also runs in the test stage.
+  before_script:
+    - npm install
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  script:
+    - echo "Linting code..."
+    - npm run lint
+
+build-image-job:
+  stage: build-image
+  image: docker:24.0.2
+  services:
+    - docker:24.0.2-dind
+  before_script:
+    - apk update && apk add --no-cache make jq
+  script:
+    - echo "Building docker image..."
+    - docker build -t weirdnest/multi-tenant .
+    - echo "Docker image built"
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."

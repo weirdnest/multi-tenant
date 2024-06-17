@@ -36,7 +36,7 @@ import { PermissionEntity } from '@w7t/multi-tenant/app/entities/permission.enti
         const synchronize = isDevEnv || isTestEnv ? true : false;
         const database = isTestEnv
           ? configService.get('POSTGRES_DB_TEST') ||
-          `${configService.get('POSTGRES_DB')}-test`
+            `${configService.get('POSTGRES_DB')}-test`
           : configService.get('POSTGRES_DB');
 
         // console.log(`app.module: db init:`, { env, synchronize });
@@ -66,4 +66,4 @@ import { PermissionEntity } from '@w7t/multi-tenant/app/entities/permission.enti
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,4 +1,3 @@
-
 import { Repository } from 'typeorm';
 import { AbstractRepository } from '../abstract.repository';
 

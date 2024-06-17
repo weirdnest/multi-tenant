@@ -1,4 +1,4 @@
-import { AuthService, IAuthService } from "@w7t/multi-tenant/core/auth";
+import { AuthService, IAuthService } from '@w7t/multi-tenant/app/auth';
 
 export const AuthServiceProvider = {
   provide: IAuthService,

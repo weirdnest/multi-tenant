@@ -1,9 +1,9 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { AuthUser } from './auth-user.dto';
 import { AbstractDto } from '@w7t/multi-tenant/infra/abstract/abstract.dto';
+import { UserEntity } from '../../entities/user.entity';
 
 export class JwtTokensDto extends AbstractDto<JwtTokensDto> {
   @ApiProperty()
@@ -22,8 +22,8 @@ export class LoginResponseDto extends AbstractDto<LoginResponseDto> {
   @ApiProperty()
   @Expose()
   @ValidateNested()
-  @Type(() => AuthUser)
-  user: AuthUser;
+  @Type(() => UserEntity)
+  user: UserEntity;
 }
 
 @Exclude()
@@ -34,7 +34,7 @@ export class RefreshResponseDto extends AbstractDto<RefreshResponseDto> {
   jwt: JwtTokensDto;
 
   @ApiProperty()
-  @Type(() => AuthUser)
+  @Type(() => UserEntity)
   @Expose()
-  user: AuthUser;
+  user: UserEntity;
 }

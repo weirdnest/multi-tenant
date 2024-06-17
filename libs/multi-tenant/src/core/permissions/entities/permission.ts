@@ -17,4 +17,7 @@ export class Permission {
   target?: any;
 
   roles?: Role[];
+
+  createdAt: Date;
+  updatedAt: Date;
 }

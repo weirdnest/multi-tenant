@@ -19,4 +19,4 @@ export const usersSamples = {
   },
 };
 
-export const { johnDoe } = usersSamples;
+export const { johnDoe, janeDoe } = usersSamples;

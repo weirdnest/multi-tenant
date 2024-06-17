@@ -7,7 +7,6 @@ import {
 } from '../abstract/abstract.repository';
 import { MemberEntity } from '@w7t/multi-tenant/app/entities/member.entity';
 
-
 export class MembersRepository extends AbstractRepository<MemberEntity> {
   constructor(
     @InjectRepository(MemberEntity)

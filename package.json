@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prepare": "npm run build:libs",
     "build:libs": "rm -rf ./dist/libs && ls -d libs/* | xargs -I {} bash -c \"cd '{}' && npx nest build -p ./tsconfig.lib.json\"",
@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./e2e/jest-e2e.json"
   },
   "dependencies": {
     "@casl/ability": "^6.7.1",
@@ -46,6 +46,7 @@
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.2.0",
     "slug": "^9.1.0",
+    "swagger-themes": "^1.4.3",
     "typeorm": "^0.3.20",
     "typeorm-naming-strategies": "^4.1.0"
   },

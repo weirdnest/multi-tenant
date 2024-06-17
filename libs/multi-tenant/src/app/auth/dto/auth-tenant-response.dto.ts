@@ -3,16 +3,16 @@ import { AbstractDto } from '@w7t/multi-tenant/infra';
 import { ApiProperty } from '@nestjs/swagger/dist/decorators';
 import { Expose, Type } from 'class-transformer';
 import { JwtTokensDto } from './login-response.dto';
-import { Member } from '../../members/entities/member';
-import { Tenant } from '../../tenants/entities/tenant';
+import { Member } from '@w7t/multi-tenant/core/members/entities/member';
+import { Tenant } from '@w7t/multi-tenant/core/tenants/entities/tenant';
 
 export class AuthTenantResponseDto extends AbstractDto<AuthTenantResponseDto> {
-  @ApiProperty()
+  @ApiProperty({ type: JwtTokensDto })
   @Expose()
   @Type(() => JwtTokensDto)
   jwt: JwtTokensDto;
 
-  @ApiProperty()
+  @ApiProperty({ type: Member })
   @Expose()
   @Type(() => Member)
   member: Member;

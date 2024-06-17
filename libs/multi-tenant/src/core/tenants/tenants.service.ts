@@ -15,14 +15,19 @@ import * as slug from 'slug';
 import { IMembersService } from '../members/interfaces/members-service.interface';
 import { MembersMessage } from '../members/constants';
 import { CreateTenantDto } from './dto/create-tenant.dto';
-import { ServiceRequestContext, ServiceFindManyOptions, AbstractFindManyResponse, ServiceFindOneOptions } from '@w7t/multi-tenant/infra';
+import {
+  ServiceRequestContext,
+  ServiceFindManyOptions,
+  AbstractFindManyResponse,
+  ServiceFindOneOptions,
+} from '@w7t/multi-tenant/infra';
 
 @Injectable()
 export class TenantsService implements ITenantsService {
   constructor(
     @Inject(ITenantsRepository) private readonly repo: ITenantsRepository,
     @Inject(IMembersService) private readonly membersService: IMembersService,
-  ) { }
+  ) {}
 
   /**
    * Creates tenant
@@ -68,7 +73,10 @@ export class TenantsService implements ITenantsService {
     if (!memberId)
       throw new InternalServerErrorException(MembersMessage.FAILED_TO_CREATE);
 
-    return tenant;
+    return {
+      ...tenant,
+      members: [member],
+    };
   }
 
   /**

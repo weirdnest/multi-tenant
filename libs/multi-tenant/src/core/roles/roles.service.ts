@@ -9,7 +9,12 @@ import {
 } from '@nestjs/common';
 
 import { Role } from './entities/role';
-import { ServiceRequestContext, ServiceFindManyOptions, AbstractFindManyResponse, ServiceFindOneOptions } from '@w7t/multi-tenant/infra';
+import {
+  ServiceRequestContext,
+  ServiceFindManyOptions,
+  AbstractFindManyResponse,
+  ServiceFindOneOptions,
+} from '@w7t/multi-tenant/infra';
 import { CreatePermissionDto } from '../permissions/dto/create-permission.dto';
 import { Permission } from '../permissions/entities/permission';
 import { IPermissionsService } from '../permissions/interfaces/permissions-service.interface';
@@ -22,15 +27,12 @@ import { IRolesRepository } from './interfaces/roles-repository.interface';
 import { IRolesService } from './interfaces/roles-service.interface';
 import { AbilityAction } from '../abilities';
 
-
 @Injectable()
 export class RolesService implements IRolesService {
   constructor(
     @Inject(IRolesRepository) private readonly repo: IRolesRepository,
     @Inject(IPermissionsService)
-    private readonly permissionsService: IPermissionsService,
-    // @Inject(ICaslAbilityService)
-    // private readonly abilities: ICaslAbilityService,
+    private readonly permissionsService: IPermissionsService, // @Inject(ICaslAbilityService) // private readonly abilities: ICaslAbilityService,
   ) {
     // this.abilities.configure(this.setAbilities);
   }
@@ -112,7 +114,7 @@ export class RolesService implements IRolesService {
     const permissionsToUpsert = [];
     actionValues.map((action, index) => {
       permissionsToUpsert.push({
-        key: `can-${action}-member-${role.slug}`,
+        key: `can_${action}_member_${role.slug}`,
         tenantId: role.tenantId,
         target: { roles: { id: roleId } },
         action,
@@ -203,7 +205,6 @@ export class RolesService implements IRolesService {
     // await this.abilities.allow(CaslAction.Delete, Role, { user, tenant }, { tenantId });
 
     const query = this.repo.getFindWhereByIds(id, { tenantId });
-    console.log('RolesService.remove:', { id, query });
     return this.repo.remove(query, { entityManager });
   }
 }

@@ -7,10 +7,10 @@ import { Role } from '../core/roles/entities/role';
 
 export type CaslAbilitySubjects =
   | InferSubjects<
-    | typeof User
-    | typeof Tenant
-    | typeof Member
-    | typeof Permission
-    | typeof Role
-  >
+      | typeof User
+      | typeof Tenant
+      | typeof Member
+      | typeof Permission
+      | typeof Role
+    >
   | 'all';

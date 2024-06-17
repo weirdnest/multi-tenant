@@ -8,8 +8,14 @@ import { TenantsMessage } from '../../tenants/constants';
 import { sampleTenant01 } from '../../tenants/interfaces/tenants.samples';
 import { sampleMember01 } from '../../members/interfaces/members.samples';
 import { PermissionsMessage } from '../constants';
-import { AbilitiesServiceProvider, AbilityFactoryProvider } from '@w7t/multi-tenant/infra';
-import { MockType, mockRepoFactory } from '@w7t/multi-tenant/infra/abstract/specs';
+import {
+  AbilitiesServiceProvider,
+  AbilityFactoryProvider,
+} from '@w7t/multi-tenant/infra';
+import {
+  MockType,
+  mockRepoFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
 import { AbilityMessages } from '../../abilities/constants';
 
 describe('PermissionsService', () => {

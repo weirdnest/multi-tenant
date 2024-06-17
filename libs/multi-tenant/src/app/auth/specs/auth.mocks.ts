@@ -8,7 +8,8 @@ import { LoginResponseDto } from '../dto/login-response.dto';
 import { IAuthService, AuthJwtPayload } from '../interfaces';
 
 import { MockType } from '@w7t/multi-tenant/infra/abstract/specs/mocks';
-import { User } from '../../users/entities/user';
+import { User } from '@w7t/multi-tenant/core/users/entities/user';
+
 
 export const HASHED_PASSWORD = 'HASHED_PASSWORD';
 

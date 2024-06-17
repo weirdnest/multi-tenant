@@ -3,7 +3,10 @@ import { UsersService } from '../users.service';
 import { User } from '../entities/user';
 import { IUsersRepository } from '../interfaces/users-repository.interface';
 import { johnDoe } from '../interfaces/users.samples';
-import { MockType, mockRepoFactory } from '@w7t/multi-tenant/infra/abstract/specs';
+import {
+  MockType,
+  mockRepoFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
 
 describe('UsersService', () => {
   let service: UsersService;

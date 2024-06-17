@@ -1,4 +1,3 @@
-
 import { AbstractRepository } from '@w7t/multi-tenant/infra/abstract';
 import { User } from '../entities/user';
 

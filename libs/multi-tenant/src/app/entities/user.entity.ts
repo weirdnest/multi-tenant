@@ -18,10 +18,10 @@ export class UserEntity extends AbstractDto<UserEntity> {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  name?: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
-  email: string;
+  email?: string;
 
   @Column({
     nullable: true,
@@ -35,7 +35,6 @@ export class UserEntity extends AbstractDto<UserEntity> {
     name: 'created_at',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn({
@@ -44,9 +43,8 @@ export class UserEntity extends AbstractDto<UserEntity> {
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  @ApiProperty()
   updatedAt: Date;
 
   @OneToMany('MemberEntity', (member: MemberEntity) => member.user)
-  members: MemberEntity[];
+  members?: MemberEntity[];
 }

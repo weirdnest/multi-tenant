@@ -6,16 +6,9 @@ import { IAuthService, AuthJwtPayload } from '../interfaces';
 // import { ModuleRef } from '@nestjs/core';
 import { IConfigService } from '../../../infra/interfaces';
 
-
 @Injectable()
 export class AuthJwtStrategy extends PassportStrategy(Strategy) {
-  // private _authService: IAuthService;
-  // public get authService() {
-  //   return this._authService;
-  // }
-
   constructor(
-    // private readonly moduleRef: ModuleRef,
     @Inject(IAuthService) private readonly authService: IAuthService,
     @Inject(IConfigService) private readonly configService: IConfigService,
   ) {
@@ -30,11 +23,8 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // async onModuleInit() {
-  //   this._authService = await this.moduleRef.resolve(IAuthService);
-  // }
-
   async validate(payload: AuthJwtPayload) {
+    // console.log(`AuthJwtStrategy.validate: payload:`, payload);
     const user = await this.authService.validateTokenPayload(payload);
     return user;
   }

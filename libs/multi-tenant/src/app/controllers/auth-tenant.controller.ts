@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 
-
 import {
   Controller,
   UseFilters,
@@ -24,8 +23,18 @@ import {
 } from '@nestjs/swagger';
 
 import { MemberEntity } from '../entities/member.entity';
-import { HttpExceptionFilter, QueryFailedExceptionFilter } from '@w7t/multi-tenant/infra/exceptions/filters';
-import { AuthJwtGuard, AuthJwtTenantGuard, AuthMessage, AuthTenantLoginDto, AuthTenantResponseDto, IAuthService } from '@w7t/multi-tenant/core/auth';
+import {
+  HttpExceptionFilter,
+  QueryFailedExceptionFilter,
+} from '@w7t/multi-tenant/infra/exceptions/filters';
+import {
+  AuthJwtGuard,
+  AuthJwtTenantGuard,
+  AuthMessage,
+  AuthTenantLoginDto,
+  AuthTenantResponseDto,
+  IAuthService,
+} from '@w7t/multi-tenant/app/auth';
 import { IMembersService } from '@w7t/multi-tenant/core/members/interfaces/members-service.interface';
 import { HttpStatusMessage } from '@w7t/multi-tenant/infra/exceptions/constants';
 import { RequestWithContext } from '@w7t/multi-tenant/infra/interfaces/request-with-context.interface';
@@ -36,7 +45,7 @@ import { MembersMessage } from '@w7t/multi-tenant/core/members/constants';
 @Controller('auth/tenant')
 @UseFilters(HttpExceptionFilter, QueryFailedExceptionFilter)
 @UseGuards(AuthJwtGuard)
-@ApiTags(`AuthController`)
+@ApiTags(`AuthTenantController`)
 export class AuthTenantController {
   constructor(
     @Inject(IMembersService) private readonly membersService: IMembersService,
@@ -45,22 +54,16 @@ export class AuthTenantController {
 
   @Get()
   @UseGuards(AuthJwtTenantGuard)
-  @ApiOperation({ summary: `Returns user with tenant data` })
+  @ApiOperation({ summary: `Returns current tenant member` })
   @ApiBearerAuth()
+  @ApiResponse({ status: HttpStatus.OK, type: MemberEntity, description: `Tenant member is logged in` })
   @ApiResponse({
-    status: HttpStatus.OK,
-    description: HttpStatusMessage.OK,
-    type: MemberEntity,
-  })
-  @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: HttpStatusMessage.UNAUTHORIZED,
+    status: HttpStatus.UNAUTHORIZED, description: HttpStatusMessage.UNAUTHORIZED,
   })
   check(@Request() req: RequestWithContext): MemberEntity {
     const { user, tenant } = req || {};
     const { id: userId } = (user as any) || {};
     const { id: tenantId } = tenant || {};
-    console.log(`AuthTenantController.check:`, { user, tenant })
     if (!userId)
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
     if (!tenantId)
@@ -86,13 +89,10 @@ export class AuthTenantController {
   @ApiOperation({ summary: `Login as tenant member` })
   @ApiBody({ type: AuthTenantLoginDto })
   @ApiResponse({
-    status: HttpStatus.CREATED,
-    type: AuthTenantResponseDto,
-    description: AuthMessage.CREATED,
+    status: HttpStatus.CREATED, type: AuthTenantResponseDto, description: AuthMessage.CREATED,
   })
   @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: AuthMessage.UNAUTHORIZED,
+    status: HttpStatus.UNAUTHORIZED, description: AuthMessage.UNAUTHORIZED,
   })
   async login(
     @Param('tenantid') tenantId: string,
@@ -101,16 +101,18 @@ export class AuthTenantController {
     const { user, tenant } = req || {};
     const { id: userId } = user || {};
 
-    if (!userId)
+    if (!userId) {
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
+    }
     // console.log(`AuthTenantController.login:`, { userId, tenantId });
     const response = await this.authService.tenantLogin(tenantId, {
       user,
       tenant,
     });
     // console.log(`AuthTenantController.login: response:`, response);
-    if (!response)
+    if (!response) {
       throw new UnauthorizedException(AuthMessage.TENANT_LOGIN_FAILED);
+    }
     return new AuthTenantResponseDto(response);
   }
 
@@ -128,13 +130,18 @@ export class AuthTenantController {
   ) {
     const { user } = req || {};
     const { id: userId } = user || {};
+    // console.log(`AuthTenantController.register:`, { userId });
+    if (!userId) {
+      throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
+    }
+
     const member = await this.membersService.create({
       tenantId,
       userId,
       isOwner: false,
       name: user.name,
       email: user.email,
-    });
+    }, { user });
     const { id: memberId } = member || {};
     // this.logger.verbose({ tenantId, memberId });
     return new MemberEntity(member as MemberEntity);

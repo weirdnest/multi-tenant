@@ -1,5 +1,6 @@
 import { Member } from '../../members/entities/member';
 import { Permission } from '../../permissions/entities/permission';
+import { Tenant } from '../../tenants/entities/tenant';
 
 export class Role {
   id: string;
@@ -8,4 +9,10 @@ export class Role {
   slug: string;
   permissions?: Permission[];
   members?: Member[];
+  tenant?: Tenant;
+  icon: string;
+  description: string;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

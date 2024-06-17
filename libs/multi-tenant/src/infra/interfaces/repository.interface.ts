@@ -1,7 +1,9 @@
-
 import { ObjectLiteral } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { ServiceFindManyOptions, ServiceFindOneOptions } from './service.interface';
+import {
+  ServiceFindManyOptions,
+  ServiceFindOneOptions,
+} from './service.interface';
 
 export interface AbstractFindManyResponse<Entity> {
   total: number;

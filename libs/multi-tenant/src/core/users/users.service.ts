@@ -10,7 +10,7 @@ export class UsersService implements IUsersService {
   constructor(
     @Inject(IUsersRepository)
     private repo: IUsersRepository,
-  ) { }
+  ) {}
 
   async create(body: Partial<User>) {
     return this.repo.create(body);

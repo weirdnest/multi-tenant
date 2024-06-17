@@ -10,8 +10,15 @@ import { sampleTenant01 } from '../../tenants/interfaces/tenants.samples';
 import { RolesMessage } from '../constants';
 import { IPermissionsService } from '../../permissions/interfaces/permissions-service.interface';
 import { sampleMember01 } from '../../members/interfaces/members.samples';
-import { AbilityFactoryProvider, AbilitiesServiceProvider } from '@w7t/multi-tenant/infra';
-import { MockType, mockRepoFactory, mockServiceFactory } from '@w7t/multi-tenant/infra/abstract/specs';
+import {
+  AbilityFactoryProvider,
+  AbilitiesServiceProvider,
+} from '@w7t/multi-tenant/infra';
+import {
+  MockType,
+  mockRepoFactory,
+  mockServiceFactory,
+} from '@w7t/multi-tenant/infra/abstract/specs';
 import { AbilityAction } from '../../abilities/constants';
 
 describe('RolesService', () => {
@@ -120,7 +127,8 @@ describe('RolesService', () => {
           target: { roles: { id: roleId } },
           action: AbilityAction.Read,
           description: expect.any(String),
-          key: expect.any(String),
+          // key: expect.any(String),
+          key: 'can_read_member_administrator',
           resource: 'Member',
           tenantId,
         }),
@@ -128,7 +136,7 @@ describe('RolesService', () => {
           target: { roles: { id: roleId } },
           action: AbilityAction.Manage,
           description: expect.any(String),
-          key: expect.any(String),
+          key: 'can_manage_member_administrator',
           resource: 'Member',
           tenantId,
         }),

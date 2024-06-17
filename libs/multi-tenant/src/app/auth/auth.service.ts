@@ -17,12 +17,13 @@ import { IJwtService } from './interfaces/jwt-service.interface';
 import { AuthUser } from './dto/auth-user.dto';
 import { UserEntity } from '@w7t/multi-tenant/app/entities/user.entity';
 import { IConfigService, ServiceRequestContext } from '@w7t/multi-tenant/infra';
-import { Member } from '../members/entities/member';
-import { IMembersService } from '../members/interfaces/members-service.interface';
-import { TenantsMessage } from '../tenants/constants';
-import { IUsersService, User, UsersMessage } from '../users';
 import { AuthTenantResponseDto } from './dto';
 import { AuthJwtPayload } from './interfaces';
+import { IUsersService } from '@w7t/multi-tenant/core/users/interfaces/users-service.interface';
+import { IMembersService } from '@w7t/multi-tenant/core/members/interfaces/members-service.interface';
+import { MemberEntity } from '../entities/member.entity';
+import { TenantsMessage } from '@w7t/multi-tenant/core/tenants/constants';
+import { UsersMessage } from '@w7t/multi-tenant/core/users/constants';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
     @Inject(IJwtService) private readonly jwtService: IJwtService,
     @Inject(IConfigService) private readonly configService: IConfigService,
     @Inject(IMembersService) private readonly membersService: IMembersService,
-  ) { }
+  ) {}
 
   async register(body: RegisterDto): Promise<AuthUser> {
     let hashedPassword = '';
@@ -39,22 +40,21 @@ export class AuthService {
       hashedPassword = await bcrypt.hash(body.password, 10);
     }
 
-    const user = await this.usersService.create({
+    const user = (await this.usersService.create({
       ...body,
       password: hashedPassword,
-    }) as AuthUser;
+    })) as AuthUser;
     return user;
   }
 
   async login(body: LoginDto): Promise<AuthUser> {
     const { email, password } = body || {};
-    // this.requestContext.addContext(this.login.name, { body });
+
     const user = (await this.usersService.findOne({ email })) as AuthUser;
     const { id: userId } = user || {};
     if (!userId) throw new UnauthorizedException(AuthMessage.UNAUTHORIZED);
 
     await this.verifyPassword(password, user.password);
-    // this.logger.verbose({ userId })
     return user;
   }
 
@@ -99,7 +99,7 @@ export class AuthService {
     if (!user?.id) return false;
     if (!tenantId) return user;
 
-    let member: Member | undefined;
+    let member: MemberEntity | undefined;
     if (tenantId && memberId) {
       member = await this.membersService.findOne(
         {
@@ -116,7 +116,7 @@ export class AuthService {
           },
         },
         { user },
-      );
+      ) as MemberEntity;
     }
     if (!member?.id) return false;
 
@@ -141,31 +141,22 @@ export class AuthService {
     if (!tenantId) throw new BadRequestException(TenantsMessage.MISSING_ID);
     const { user } = context || {};
     const { id: userId } = user || {};
-    if (!userId)
+    if (!userId) {
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
+    }
 
     const member = await this.membersService.findOne(
       {
-        where: {
-          tenantId,
-          userId,
-        },
-        relations: {
-          tenant: true,
-          // tenant: {
-          //   roles: true,
-          //   permissions: true,
-          // },
-        },
+        where: { tenantId, userId },
+        relations: { tenant: true },
       },
       { user },
     );
 
-    console.log(`AuthService.tenantLogin: member:`, member);
     const { id: memberId, tenant } = member || {};
-    if (!memberId)
+    if (!memberId) {
       throw new ForbiddenException(AuthMessage.TENANT_LOGIN_FAILED);
-    // this.logger.verbose({ tenantId, userId, memberId, tenantName });
+    }
 
     return {
       jwt: {
@@ -173,8 +164,8 @@ export class AuthService {
         refresh: this.getJwtRefreshToken(userId, { tenantId, memberId }),
       },
       user: user as UserEntity,
-      member: member,// as MemberEntity,
-      tenant: tenant,// as TenantEntity,
+      member: member,
+      tenant: tenant,
     };
   }
 }

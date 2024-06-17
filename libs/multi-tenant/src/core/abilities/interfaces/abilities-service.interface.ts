@@ -1,9 +1,8 @@
-import { ServiceFindManyOptions } from "@w7t/multi-tenant/infra/interfaces/service.interface";
-import { Tenant } from "../../tenants/entities/tenant";
-import { User } from "../../users/entities/user";
-import { AbilityAction, AbilityActionValue } from "../constants";
-import { AbilityBuilder, MongoAbility, MongoQuery } from "@casl/ability";
-
+import { ServiceFindManyOptions } from '@w7t/multi-tenant/infra/interfaces/service.interface';
+import { Tenant } from '../../tenants/entities/tenant';
+import { User } from '../../users/entities/user';
+import { AbilityAction, AbilityActionValue } from '../constants';
+import { AbilityBuilder, MongoAbility, MongoQuery } from '@casl/ability';
 
 export interface SetAbilitiesContext {
   user?: User;

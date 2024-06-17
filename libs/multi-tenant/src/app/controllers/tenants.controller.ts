@@ -11,13 +11,18 @@ import {
   UseFilters,
   UseGuards,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
-import { AuthJwtGuard } from '@w7t/multi-tenant/core/auth/guards/auth-jwt.guard';
+import { AuthJwtGuard } from '@w7t/multi-tenant/app/auth/guards/auth-jwt.guard';
 import { CreateTenantDto } from '@w7t/multi-tenant/core/tenants/dto/create-tenant.dto';
 import { ITenantsService } from '@w7t/multi-tenant/core/tenants/interfaces/tenants-service.interface';
-import { HttpExceptionFilter, QueryFailedExceptionFilter } from '@w7t/multi-tenant/infra/exceptions/filters';
+import {
+  HttpExceptionFilter,
+  QueryFailedExceptionFilter,
+} from '@w7t/multi-tenant/infra/exceptions/filters';
 // import { TransactionInterceptor } from "src/infra/interceptors/transaction.interceptor";
 import { RequestWithContext } from '@w7t/multi-tenant/infra/interfaces';
+import { TrimPipe } from '@w7t/multi-tenant/infra/pipes';
 
 @Controller('tenants')
 @UseFilters(HttpExceptionFilter, QueryFailedExceptionFilter)
@@ -25,7 +30,7 @@ import { RequestWithContext } from '@w7t/multi-tenant/infra/interfaces';
 export class TenantsController {
   constructor(
     @Inject(ITenantsService) private readonly tenantsService: ITenantsService,
-  ) { }
+  ) {}
 
   @Get()
   async find(@Query() query: any, @Request() req: RequestWithContext) {
@@ -40,6 +45,7 @@ export class TenantsController {
   }
 
   @Post()
+  @UsePipes(TrimPipe)
   // @UseInterceptors(TransactionInterceptor)
   async create(
     @Body() body: CreateTenantDto,
