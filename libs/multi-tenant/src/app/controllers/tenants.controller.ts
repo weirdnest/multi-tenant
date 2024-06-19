@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthJwtGuard } from '@w7t/multi-tenant/app/auth/guards/auth-jwt.guard';
 import { CreateTenantDto } from '@w7t/multi-tenant/core/tenants/dto/create-tenant.dto';
 import { ITenantsService } from '@w7t/multi-tenant/core/tenants/interfaces/tenants-service.interface';
@@ -27,10 +28,11 @@ import { TrimPipe } from '@w7t/multi-tenant/infra/pipes';
 @Controller('tenants')
 @UseFilters(HttpExceptionFilter, QueryFailedExceptionFilter)
 @UseGuards(AuthJwtGuard)
+@ApiTags('TenantsController')
 export class TenantsController {
   constructor(
     @Inject(ITenantsService) private readonly tenantsService: ITenantsService,
-  ) {}
+  ) { }
 
   @Get()
   async find(@Query() query: any, @Request() req: RequestWithContext) {

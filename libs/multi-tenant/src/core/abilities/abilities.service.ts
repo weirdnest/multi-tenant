@@ -31,8 +31,7 @@ import { IAbilityFactory } from './interfaces/ability-factory.interface';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AbilitiesService<T extends AnyAbility>
-  implements IAbilitiesService
-{
+  implements IAbilitiesService {
   private _context: ServiceRequestContext;
   public get context() {
     return this._context;
@@ -46,10 +45,6 @@ export class AbilitiesService<T extends AnyAbility>
     this._setAbilities = setAbilities;
   }
 
-  private _key = String(Math.round(Math.random() * 9999));
-  public get key() {
-    return this._key;
-  }
 
   constructor(
     @Inject(IAbilityFactory)
@@ -60,6 +55,7 @@ export class AbilitiesService<T extends AnyAbility>
   public get ability() {
     return this._ability;
   }
+  private abilities = this;
 
   private _builder: AbilityBuilder<
     MongoAbility<[AbilityAction, T], MongoQuery>
@@ -94,19 +90,21 @@ export class AbilitiesService<T extends AnyAbility>
     return this.ability;
   }
 
-  private getRelatedPermissions(member: Member, classConstructorName: string) {
-    const { id: memberId, roles } = member || {};
+  getRelatedPermissions(member: Member, classConstructorName: string) {
+    const { id: memberId, userId, roles } = member || {};
+    console.log(`AbilitiesService.getRelatedPermissions: member:`, member);
     if (!memberId) return [];
 
     const permissions: Permission[] = [];
     const collectedPermissionsKeys: Record<string, boolean> = {};
+    console.log(`AbilitiesService.getRelatedPermissions: roles:`, roles);
 
     if (Array.isArray(roles)) {
       roles.forEach((role) => {
         const { permissions: rolePermissions } = role || {};
         if (Array.isArray(rolePermissions)) {
           rolePermissions.forEach((permission) => {
-            // console.log(`CaslAbilityService.getRelatedPermissions:`, permission);
+            console.log(`AbilitiesService.getRelatedPermissions:`, { permission, classConstructorName });
 
             // filtering permissions related to resource
             if (permission.resource === classConstructorName) {
@@ -124,7 +122,6 @@ export class AbilitiesService<T extends AnyAbility>
   }
 
   async getQueryFilter(
-    query: ServiceFindManyOptions<unknown>,
     actions: AbilityAction | AbilityActionValue[],
     classConstructor: any,
     context: SetAbilitiesContext,
@@ -132,37 +129,39 @@ export class AbilitiesService<T extends AnyAbility>
     const { user, tenant } = context || {};
     const condition = new classConstructor();
     const [member] = tenant?.members || [];
-    const { id: memberId, isOwner, roles = [] } = member || {};
+    const { id: memberId, isOwner, tenantId, roles = [] } = member || {};
     const filter: any = {};
+    console.log(`AbilitiesService.getQueryFilter:`, { isOwner, tenantId, })
 
-    if (isOwner) return true;
+    if (isOwner) return filter;
+    const entityName = condition.constructor.name;
 
     const permissions = this.getRelatedPermissions(
       member,
-      condition.constructor.name,
+      entityName,
     );
-    // console.log(`CaslAbilityService.getQueryFilter: user: ${user?.name}, roles: ${roles?.length}, permissions: ${permissions?.length}, roles:`, roles.map((role) => role.slug));
+    console.log(`AbilitiesService.getQueryFilter: user: ${user?.name}, roles: ${roles?.length}, permissions: ${permissions?.length}, roles:`, roles.map((role) => role.slug));
 
     permissions.forEach((permission) => {
-      const { target, action: permittedAction } = permission || {};
-      // console.log(`CaslAbilityService.getQueryFilter: permittedAction: ${permittedAction}, actions:`, actions);
+      const { target, query, action: permittedAction } = permission || {};
+      // console.log(`AbilitiesService.getQueryFilter: permittedAction: ${permittedAction}, actions:`, actions);
       if (
         permittedAction === AbilityAction.Manage ||
         actions === permittedAction ||
         (Array.isArray(actions) &&
           actions.indexOf(permittedAction as AbilityAction) !== -1)
       ) {
-        Object.keys(target).forEach((targetKey) => {
-          // console.log(`CaslAbilityService.getQueryFilter: targetKey:`, targetKey, `, value:`, target[targetKey]);
-          if (target[targetKey]) {
-            if (Array.isArray(filter[targetKey])) {
-              filter[targetKey].push(target[targetKey]);
+        Object.keys(query).forEach((queryKey) => {
+          // console.log(`AbilitiesService.getQueryFilter: targetKey:`, targetKey, `, value:`, target[targetKey]);
+          if (query[queryKey]) {
+            if (Array.isArray(filter[queryKey])) {
+              filter[queryKey].push(query[queryKey]);
             } else {
-              filter[targetKey] = filter[targetKey] ? [filter[targetKey]] : [];
-              filter[targetKey].push(target[targetKey]);
+              filter[queryKey] = filter[queryKey] ? [filter[queryKey]] : [];
+              filter[queryKey].push(query[queryKey]);
             }
           } else {
-            filter[targetKey] = target[targetKey];
+            filter[queryKey] = query[queryKey];
           }
         });
       }
@@ -196,17 +195,24 @@ export class AbilitiesService<T extends AnyAbility>
       condition.constructor.name,
     );
 
-    // console.log(`CaslAbilityService.allow: permissions:`, permissions);
+    console.log(`AbilitiesService.allow: permissions:`, permissions);
+    console.log(`AbilitiesService.allow: payload:`, payload);
 
     Object.keys(payload).forEach((key) => {
       condition[key] = payload[key];
     });
+    console.log(`AbilitiesService.allow: condition:`, condition);
 
     if (!Array.isArray(actions)) {
       actions = [actions];
     }
+    console.log(`AbilitiesService.allow:`, { actions, condition });
+
+    const canManage = ability.can(AbilityAction.Manage, condition as T);
+    console.log(`AbilitiesService.allow: canManage:`, canManage)
 
     actions.forEach((action) => {
+      console.log(`AbilitiesService.allow: action:`, action)
       if (!ability.can(action as AbilityAction, condition as T)) {
         throw new HttpException(
           AbilityMessages.FORBIDDEN,

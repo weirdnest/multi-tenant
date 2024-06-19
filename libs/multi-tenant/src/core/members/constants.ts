@@ -3,3 +3,5 @@ export enum MembersMessage {
   MISSING_CONTEXT_MEMBER = `Member data is missing in context`,
   NOT_FOUND = `Member not found`,
 }
+
+export const ENTITY_NAME_MEMBER = 'Member';

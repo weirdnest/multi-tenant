@@ -55,12 +55,13 @@ export class AuthController {
   @UseGuards(AuthJwtGuard)
   @ApiOperation({ summary: `Returns current user` })
   @ApiBearerAuth()
-  @ApiResponse({ status: HttpStatus.OK, description: HttpStatusMessage.OK, type: User })
+  @ApiResponse({ status: HttpStatus.OK, description: HttpStatusMessage.OK, type: UserEntity })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: HttpStatusMessage.UNAUTHORIZED })
   check(@Request() req: RequestWithContext): UserEntity {
     const { user } = req || {};
-    if (!user?.id)
+    if (!user?.id) {
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
+    }
     return new UserEntity(user);
   }
 
@@ -99,7 +100,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     type: UserEntity,
-    description: AuthMessage.CREATED,
+    description: AuthMessage.REGISTERED,
   })
   @UsePipes(TrimPipe)
   async register(@Body() body: RegisterDto): Promise<UserEntity> {
@@ -118,8 +119,9 @@ export class AuthController {
   })
   refresh(@Request() req: RequestWithContext): RefreshResponseDto {
     const { user } = req || {};
-    if (!user?.id)
+    if (!user?.id) {
       throw new InternalServerErrorException(UsersMessage.MISSING_CONTEXT_USER);
+    }
     const accessToken = this.authService.getJwtAccessToken(user.id);
     const refreshToken = this.authService.getJwtRefreshToken(user.id);
     return new RefreshResponseDto({

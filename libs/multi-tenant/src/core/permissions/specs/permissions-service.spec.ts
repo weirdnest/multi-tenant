@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PermissionsService } from '../permissions.service';
 import { IPermissionsRepository } from '../interfaces/permissions-repository.interface';
-import { samplePermission01 } from '../interfaces/permissions.samples';
+import { samplePermissionCanReadAdmin } from '../interfaces/permissions.samples';
 import { UsersMessage } from '../../users';
 import { johnDoe } from '../../users/interfaces/users.samples';
 import { TenantsMessage } from '../../tenants/constants';
@@ -24,7 +24,7 @@ describe('PermissionsService', () => {
 
   const entityManager = undefined;
   const { id: tenantId } = sampleTenant01;
-  const permissionId = samplePermission01.id;
+  const permissionId = samplePermissionCanReadAdmin.id;
 
   const tenantWithMember = {
     ...sampleTenant01,
@@ -57,7 +57,7 @@ describe('PermissionsService', () => {
   });
 
   it('create: throws error without user in context', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await expect(
       async () => await service.create(payload, { tenant: tenantWithMember }),
     ).rejects.toThrow(UsersMessage.MISSING_CONTEXT_USER);
@@ -65,7 +65,7 @@ describe('PermissionsService', () => {
   });
 
   it('create: throws error without tenant in context', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await expect(
       async () => await service.create(payload, { user: johnDoe }),
     ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
@@ -97,7 +97,7 @@ describe('PermissionsService', () => {
   });
 
   it('create: requests repository', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await service.create(payload, {
       user: johnDoe,
       tenant: tenantWithMember,
@@ -114,7 +114,7 @@ describe('PermissionsService', () => {
   });
 
   it('findMany: throws error without tenant in context', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await expect(
       async () => await service.findMany(payload, { user: johnDoe }),
     ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
@@ -122,7 +122,7 @@ describe('PermissionsService', () => {
   });
 
   it('findMany: requests repository', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await service.findMany(payload, {
       user: johnDoe,
       tenant: tenantWithMember,
@@ -131,7 +131,7 @@ describe('PermissionsService', () => {
   });
 
   it('findOne: throws error without tenant in context', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await expect(
       async () => await service.findOne(payload, { user: johnDoe }),
     ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
@@ -139,16 +139,16 @@ describe('PermissionsService', () => {
   });
 
   it('findOne: requests repository', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await service.findOne(payload, { user: johnDoe, tenant: tenantWithMember });
     expect(mockRepo.findOne).toHaveBeenCalledWith(payload);
   });
 
   it('update: throws error without tenant in context', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await expect(
       async () =>
-        await service.update(samplePermission01.id, payload, { user: johnDoe }),
+        await service.update(samplePermissionCanReadAdmin.id, payload, { user: johnDoe }),
     ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
     expect(mockRepo.update).toHaveBeenCalledTimes(0);
   });
@@ -166,7 +166,7 @@ describe('PermissionsService', () => {
   // });
 
   it('update: requests repository', async () => {
-    const payload = { key: samplePermission01.key };
+    const payload = { key: samplePermissionCanReadAdmin.key };
     await service.update(permissionId, payload, {
       user: johnDoe,
       tenant: tenantWithMember,
@@ -177,7 +177,7 @@ describe('PermissionsService', () => {
   it('remove: throws error without tenant in context', async () => {
     await expect(
       async () =>
-        await service.remove(samplePermission01.id, { user: johnDoe }),
+        await service.remove(samplePermissionCanReadAdmin.id, { user: johnDoe }),
     ).rejects.toThrow(TenantsMessage.MISSING_CONTEXT_TENANT);
     expect(mockRepo.update).toHaveBeenCalledTimes(0);
   });

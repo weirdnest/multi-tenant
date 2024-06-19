@@ -10,11 +10,9 @@ export class Permission {
   description?: string;
   action?: string;
   resource?: string;
-  // rolePermissions: RolePermission[];
   tenant?: Tenant;
-  // roleId?: string;
-  // role: Role;
-  target?: any;
+  target?: Record<string, string | number | boolean>;
+  query?: any;
 
   roles?: Role[];
 

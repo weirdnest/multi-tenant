@@ -5,6 +5,7 @@ export enum HttpStatusMessage {
   CREATED = `Created`,
   INTERNAL_SERVER_ERROR = `Internal server error`,
   UNAUTHORIZED = `Unauthorized`,
+  AUTHORIZED = `Authorized`,
   BAD_REQUEST = `Bad Request`,
   FORBIDDEN = `Forbidden`,
 }

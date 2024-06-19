@@ -51,6 +51,7 @@ export class MemberEntity extends AbstractDto<MemberEntity> {
     name: 'created_at',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
+  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn({
@@ -59,6 +60,7 @@ export class MemberEntity extends AbstractDto<MemberEntity> {
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
+  @ApiProperty()
   updatedAt: Date;
 
   @ManyToOne('UserEntity', (user: UserEntity) => user.members)
@@ -66,9 +68,11 @@ export class MemberEntity extends AbstractDto<MemberEntity> {
   user?: UserEntity;
 
   @ManyToOne(() => TenantEntity, (tenant: TenantEntity) => tenant.members)
+  @ApiProperty({ type: TenantEntity })
   tenant?: TenantEntity;
 
   @ManyToMany(() => RoleEntity, (role: RoleEntity) => role.members)
   @JoinTable({ name: 'members_roles' })
+  @ApiProperty({ type: [RoleEntity] })
   roles?: RoleEntity[];
 }

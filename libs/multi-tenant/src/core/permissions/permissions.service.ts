@@ -5,7 +5,7 @@ import { Member } from '../members/entities/member';
 import {
   ServiceRequestContext,
   ServiceFindManyOptions,
-  AbstractFindManyResponse,
+  IFindManyResponse,
   ServiceFindOneOptions,
 } from '@w7t/multi-tenant/infra';
 import { TenantsMessage } from '../tenants/constants';
@@ -98,7 +98,7 @@ export class PermissionsService implements IPermissionsService {
   async findMany(
     query: ServiceFindManyOptions<Permission>,
     context: ServiceRequestContext,
-  ): Promise<AbstractFindManyResponse<Permission>> {
+  ): Promise<IFindManyResponse<Permission>> {
     const { user, tenant } = context || {};
     const { id: userId } = user || {};
     const { id: tenantId } = tenant || {};
@@ -184,7 +184,7 @@ export class PermissionsService implements IPermissionsService {
       throw new BadRequestException(TenantsMessage.MISSING_CONTEXT_TENANT);
     // await this.abilities.allow(CaslAction.Create, Permission, { user, tenant }, { tenantId });
 
-    console.log(`PermissionsService.upsert: records:`, records);
+    // console.log(`PermissionsService.upsert: records:`, records);
     if (!Array.isArray(records)) records = [records];
 
     if (records.length > PERMISSIONS_UPSERT_LIMIT) {

@@ -18,7 +18,7 @@ import { CreateTenantDto } from './dto/create-tenant.dto';
 import {
   ServiceRequestContext,
   ServiceFindManyOptions,
-  AbstractFindManyResponse,
+  IFindManyResponse,
   ServiceFindOneOptions,
 } from '@w7t/multi-tenant/infra';
 
@@ -27,7 +27,7 @@ export class TenantsService implements ITenantsService {
   constructor(
     @Inject(ITenantsRepository) private readonly repo: ITenantsRepository,
     @Inject(IMembersService) private readonly membersService: IMembersService,
-  ) {}
+  ) { }
 
   /**
    * Creates tenant
@@ -86,8 +86,8 @@ export class TenantsService implements ITenantsService {
    */
   private async createTenantSlug(name: string) {
     let tenantSlug = slug(name);
-    const isSlugInUse = this.repo.findOne({ slug: tenantSlug });
-    if (isSlugInUse) {
+    const isSlugInUse = await this.repo.findOne({ slug: tenantSlug });
+    if (isSlugInUse?.id) {
       tenantSlug = `${tenantSlug}-${Math.round(Math.random() * 999999)}`;
     }
     return tenantSlug;
@@ -126,7 +126,7 @@ export class TenantsService implements ITenantsService {
   findMany(
     query: ServiceFindManyOptions<Tenant>,
     context: ServiceRequestContext,
-  ): Promise<AbstractFindManyResponse<Tenant>> {
+  ): Promise<IFindManyResponse<Tenant>> {
     const { user, tenant } = context || {};
     const { id: userId } = user || {};
     if (!userId)

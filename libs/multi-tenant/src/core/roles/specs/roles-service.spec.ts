@@ -20,6 +20,7 @@ import {
   mockServiceFactory,
 } from '@w7t/multi-tenant/infra/abstract/specs';
 import { AbilityAction } from '../../abilities/constants';
+import { ENTITY_NAME_MEMBER } from '../../members/constants';
 
 describe('RolesService', () => {
   let service: RolesService;
@@ -124,16 +125,16 @@ describe('RolesService', () => {
     expect(permissionsService.upsert).toHaveBeenCalledWith(
       [
         expect.objectContaining({
-          target: { roles: { id: roleId } },
+          target: { roleId },
           action: AbilityAction.Read,
           description: expect.any(String),
           // key: expect.any(String),
           key: 'can_read_member_administrator',
-          resource: 'Member',
+          resource: ENTITY_NAME_MEMBER,
           tenantId,
         }),
         expect.objectContaining({
-          target: { roles: { id: roleId } },
+          target: { roleId },
           action: AbilityAction.Manage,
           description: expect.any(String),
           key: 'can_manage_member_administrator',

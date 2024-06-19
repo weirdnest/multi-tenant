@@ -1,6 +1,7 @@
 export enum AuthMessage {
   OK = `Success`,
   CREATED = `Authorized`,
+  REGISTERED = `Successfully registered`,
   UNAUTHORIZED = `Wrong credentials provided`,
   MISSING_TOKEN = `Token not available in payload`,
   MISSING_CONTEXT_USER = `User context error`,

@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { janeDoe } from '@w7t/multi-tenant/core/users/interfaces/users.samples';
 import { sampleTenant01 } from '@w7t/multi-tenant/core/tenants/interfaces/tenants.samples';
 import { HttpStatusMessage } from '@w7t/multi-tenant/infra/exceptions/constants';
+import { ITenantsRepository } from '@w7t/multi-tenant/core/tenants';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -23,20 +24,23 @@ describe('AppController (e2e)', () => {
   let tenantAccessToken = '';
   let tenantRefreshToken = '';
   let tenantsService: ITenantsService;
+  let tenantsRepository: ITenantsRepository;
   let isTenantAvailable = false;
 
 
   const afterInit = async (moduleRef: TestingModule) => {
     usersService = await moduleRef.resolve(IUsersService);
-    tenantsService = await moduleRef.resolve(ITenantsService);
+    tenantsRepository = await moduleRef.resolve(ITenantsRepository);
 
     const userJaneDoe = await usersService.findOne({ email: janeDoe.email });
     isUserAvailable = !!userJaneDoe?.id;
     if (isUserAvailable) janeDoe.id = userJaneDoe.id;
 
-    const tenant = await tenantsService.findOne({ name: sampleTenant01.name }, {
-      user: userJaneDoe,
-    });
+    // const tenant = await tenantsService.findOne({ name: sampleTenant01.name }, {
+    //   user: userJaneDoe,
+    // });
+    const tenant = await tenantsRepository.findOne({ slug: sampleTenant01.slug });
+    console.log(`501: tenant:`, tenant);
     const { id: tenantId } = tenant || {};
     if (!tenantId) throw new Error(`Tenant not found`);
     Object.assign(sampleTenant01, tenant);
@@ -110,7 +114,7 @@ describe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.CREATED)
       .then((res) => {
-        console.log(`202: register response:`, res.body);
+        console.log(`501: register response:`, res.body);
         expect(res.body.email).toEqual(janeDoe.email);
         expect(res.body.isOwner).toEqual(false);
         expect(res.body.tenantId).toEqual(sampleTenant01.id);

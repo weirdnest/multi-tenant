@@ -5,7 +5,7 @@ import {
   ServiceFindOneOptions,
 } from './service.interface';
 
-export interface AbstractFindManyResponse<Entity> {
+export interface IFindManyResponse<Entity> {
   total: number;
   data: Entity[];
 }
@@ -25,7 +25,7 @@ export interface IRepository<Entity> {
   count(query?: any): Promise<number>;
   findAndCount(query?: any): Promise<[Entity[], number]>;
   findOne(query?: any): Promise<Entity>;
-  findMany(query?: any): Promise<AbstractFindManyResponse<Entity>>;
+  findMany(query?: any): Promise<IFindManyResponse<Entity>>;
   find(query?: any): Promise<Entity[]>;
   update(
     id: string | string[],

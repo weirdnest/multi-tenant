@@ -1,16 +1,9 @@
 import {
   ExecutionContext,
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Inject,
   Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import type { Observable } from 'rxjs';
 import { AuthGuard } from '@nestjs/passport';
-import { ModuleRef } from '@nestjs/core';
 
 @Injectable()
 export class AuthJwtTenantGuard extends AuthGuard('jwt-tenant') {
@@ -29,12 +22,13 @@ export class AuthJwtTenantGuard extends AuthGuard('jwt-tenant') {
     const request = context.switchToHttp().getRequest();
     const { user } = request;
     const { id: userId, tenant } = user || {};
-    console.log(`AuthJwtTenant.canActivate:`, { user });
+    const { id: tenantId } = tenant || {};
+    // console.log(`AuthJwtTenant.canActivate:`, { userId, tenantId });
     if (!userId) {
       // this.logger.verbose(`User not found in context`);
       return false;
     }
-    if (!tenant?.id) {
+    if (!tenantId) {
       // this.logger.verbose(`Tenant not found in context`);
       return false;
     }

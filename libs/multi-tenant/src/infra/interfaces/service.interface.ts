@@ -9,7 +9,7 @@ import {
   FindOptionsWhere,
   ObjectId,
 } from 'typeorm';
-import { AbstractFindManyResponse } from './repository.interface';
+import { IFindManyResponse } from './repository.interface';
 import { Tenant } from '@w7t/multi-tenant/core/tenants';
 export { FindManyOptions, FindOneOptions } from 'typeorm';
 
@@ -39,7 +39,7 @@ export interface ServiceInterface<Entity, CreateEntityDto, UpdateEntityDto> {
   findMany(
     query: ServiceFindManyOptions<Entity>,
     context?: ServiceRequestContext,
-  ): Promise<AbstractFindManyResponse<Entity>>;
+  ): Promise<IFindManyResponse<Entity>>;
   findOne(
     query: ServiceFindOneOptions<Entity>,
     context?: ServiceRequestContext,

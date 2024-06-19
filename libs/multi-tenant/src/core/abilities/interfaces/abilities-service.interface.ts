@@ -3,6 +3,7 @@ import { Tenant } from '../../tenants/entities/tenant';
 import { User } from '../../users/entities/user';
 import { AbilityAction, AbilityActionValue } from '../constants';
 import { AbilityBuilder, MongoAbility, MongoQuery } from '@casl/ability';
+import { Permission } from '../../permissions/entities/permission';
 
 export interface SetAbilitiesContext {
   user?: User;
@@ -36,11 +37,12 @@ export interface IAbilitiesService {
   ) => Promise<void>;
 
   getQueryFilter: (
-    query: ServiceFindManyOptions<unknown>,
     actions: AbilityAction | AbilityActionValue[],
     classConstructor: any,
     context: SetAbilitiesContext,
   ) => Promise<any>;
+
+  getRelatedPermissions(entity: any, classConstructorName: string): Permission[];
 }
 
 export const IAbilitiesService = Symbol('IAbilitiesService');

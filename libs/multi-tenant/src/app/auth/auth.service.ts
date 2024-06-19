@@ -32,7 +32,7 @@ export class AuthService {
     @Inject(IJwtService) private readonly jwtService: IJwtService,
     @Inject(IConfigService) private readonly configService: IConfigService,
     @Inject(IMembersService) private readonly membersService: IMembersService,
-  ) {}
+  ) { }
 
   async register(body: RegisterDto): Promise<AuthUser> {
     let hashedPassword = '';
@@ -93,7 +93,7 @@ export class AuthService {
 
   async validateTokenPayload(body: AuthJwtPayload) {
     const { userId, tenantId, memberId } = body || {};
-    console.log(`AuthService.validateTokenPayload: body:`, body);
+    // console.log(`AuthService.validateTokenPayload: body:`, body);
     if (!userId) return false;
     const user = await this.usersService.findOne({ id: userId });
     if (!user?.id) return false;

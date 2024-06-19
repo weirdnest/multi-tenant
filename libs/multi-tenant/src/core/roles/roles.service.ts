@@ -12,7 +12,7 @@ import { Role } from './entities/role';
 import {
   ServiceRequestContext,
   ServiceFindManyOptions,
-  AbstractFindManyResponse,
+  IFindManyResponse,
   ServiceFindOneOptions,
 } from '@w7t/multi-tenant/infra';
 import { CreatePermissionDto } from '../permissions/dto/create-permission.dto';
@@ -26,6 +26,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { IRolesRepository } from './interfaces/roles-repository.interface';
 import { IRolesService } from './interfaces/roles-service.interface';
 import { AbilityAction } from '../abilities';
+import { ENTITY_NAME_MEMBER } from '../members/constants';
 
 @Injectable()
 export class RolesService implements IRolesService {
@@ -116,9 +117,9 @@ export class RolesService implements IRolesService {
       permissionsToUpsert.push({
         key: `can_${action}_member_${role.slug}`,
         tenantId: role.tenantId,
-        target: { roles: { id: roleId } },
+        target: { roleId },
         action,
-        resource: 'Member',
+        resource: ENTITY_NAME_MEMBER,
         description: `Can ${action} members with role: ${role.name}`,
       });
     });
@@ -128,7 +129,7 @@ export class RolesService implements IRolesService {
   async findMany(
     query: ServiceFindManyOptions<Role>,
     context: ServiceRequestContext,
-  ): Promise<AbstractFindManyResponse<Role>> {
+  ): Promise<IFindManyResponse<Role>> {
     const { user, tenant } = context || {};
     const { id: userId } = user || {};
     const { id: tenantId } = tenant || {};

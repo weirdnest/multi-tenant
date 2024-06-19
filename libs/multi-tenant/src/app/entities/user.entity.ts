@@ -11,16 +11,20 @@ import {
 
 import { AbstractDto } from '../../infra';
 import { MemberEntity } from './member.entity';
+import { johnDoe } from '@w7t/multi-tenant/core/users/interfaces/users.samples';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractDto<UserEntity> {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty({ example: johnDoe.id })
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
+  @ApiProperty({ example: johnDoe.name })
   name?: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
+  @ApiProperty({ example: johnDoe.email })
   email?: string;
 
   @Column({

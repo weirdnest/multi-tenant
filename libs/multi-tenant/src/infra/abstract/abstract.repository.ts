@@ -10,7 +10,7 @@ import {
   Repository,
 } from 'typeorm';
 import {
-  AbstractFindManyResponse,
+  IFindManyResponse,
   EntitiesToUpsert,
   IRepository,
   IRepositoryRequestParams,
@@ -97,7 +97,7 @@ export abstract class AbstractRepository<Entity>
    */
   async findMany(
     options?: ServiceFindManyOptions<Entity>,
-  ): Promise<AbstractFindManyResponse<Entity>> {
+  ): Promise<IFindManyResponse<Entity>> {
     const [data, total] = await this.findAndCount(options);
     return { total, data };
   }

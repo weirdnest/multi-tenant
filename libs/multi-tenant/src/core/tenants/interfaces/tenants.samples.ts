@@ -6,6 +6,11 @@ export const sampleTenantsData = {
     name: 'Tenant 01',
     slug: 'tenant-01',
   } as Tenant,
+  sampleTenant02: {
+    id: 'eccc402f-6db1-4893-a32d-39168a5c4b30',
+    name: 'Tenant 02',
+    slug: 'tenant-02',
+  } as Tenant,
 };
 
-export const { sampleTenant01 } = sampleTenantsData;
+export const { sampleTenant01, sampleTenant02 } = sampleTenantsData;
